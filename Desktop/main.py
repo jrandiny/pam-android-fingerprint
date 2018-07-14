@@ -4,7 +4,7 @@ import pyotp
 import ConfigParser
 
 DEFAULT_USER = "nobody"
-CONFIG_LOC = "/home/joshua/Dev/pam-android-fingerprint/config"
+CONFIG_LOC = "/home/joshua/Dev/pam-android-fingerprint/Desktop/config"
 
 def pam_sm_authenticate(pamh, flags, argv):
 
