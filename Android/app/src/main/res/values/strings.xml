@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Fingerprint Authenticator</string>
+    <string name="status">Status</string>
+    <string name="starting">Starting up</string>
+    <string name="started">Started</string>
+    <string name="dialog_text">Authenticate with your fingerprint</string>
 </resources>
