@@ -27,4 +27,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusHeader" />
+
+    <Button
+        android:id="@+id/setupBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/setupbtn"
+        app:layout_constraintTop_toBottomOf="@+id/statusText"
+        tools:layout_editor_absoluteX="148dp"
+        />
 </android.support.constraint.ConstraintLayout>

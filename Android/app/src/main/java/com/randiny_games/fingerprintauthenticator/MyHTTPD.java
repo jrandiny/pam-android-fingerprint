@@ -53,7 +53,7 @@ public class MyHTTPD extends NanoHTTPD {
                 System.out.println("test");
             }
 
-            String secret = SecurePreferences.getStringValue("secretValue", "");
+            String secret = SecurePreferences.getStringValue("decryptedKey", "");
 
             if (secret.equals("")) {
                 try {
@@ -71,6 +71,8 @@ public class MyHTTPD extends NanoHTTPD {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                SecurePreferences.removeValue("decryptedKey");
             }
 
 

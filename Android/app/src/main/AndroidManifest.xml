@@ -3,6 +3,7 @@
     package="com.randiny_games.fingerprintauthenticator">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:allowBackup="true"
