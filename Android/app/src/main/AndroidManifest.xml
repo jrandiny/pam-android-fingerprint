@@ -24,7 +24,9 @@
         <service
             android:name=".server"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".setupActivity"></activity>
     </application>
 
 </manifest>

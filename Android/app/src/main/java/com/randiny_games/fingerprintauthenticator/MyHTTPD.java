@@ -78,14 +78,29 @@ public class MyHTTPD extends NanoHTTPD {
 
             return newFixedLengthResponse(msg.toString());
         } else if (uri.equals("/store")){
+
             String secret = session.getParameters().get("secret").get(0);
             if(!secret.equals("")){
-                SecurePreferences.setValue("secretValue", secret);
+                SecurePreferences.setValue("decryptedKey", secret);
+
+                Intent intent = new Intent(context, setupActivity.class);
+
+                context.startActivity(intent);
+
+                synchronized(syncToken){
+                    try{
+                        System.out.println("Waiting for setup to complete...");
+                        syncToken.wait();
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                    System.out.println("test2");
+                }
+
                 return newFixedLengthResponse("success");
             }else {
                 return newFixedLengthResponse("error");
             }
-
 
         }
         return  null;

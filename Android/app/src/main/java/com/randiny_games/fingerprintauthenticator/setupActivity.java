@@ -1,12 +1,9 @@
 package com.randiny_games.fingerprintauthenticator;
 
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jesusm.kfingerprintmanager.KFingerprintManager;
 
@@ -14,26 +11,20 @@ import org.jetbrains.annotations.NotNull;
 
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
-public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
+public class setupActivity extends AppCompatActivity {
 
-    private Button authButton;
     private KFingerprintManager fm;
     private TextView status;
-
+    private String secret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setup);
 
-        setContentView(R.layout.activity_auth);
-        authButton = (Button) findViewById(R.id.authButton);
-        status = (TextView) findViewById(R.id.authDesc);
-
-        authButton.setOnClickListener(this);
+        status = (TextView) findViewById(R.id.setupStatus);
 
         fm = new KFingerprintManager(this,"fingerprintPam");
-
-
 
     }
 
@@ -41,27 +32,24 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
-        System.out.println("masuk");
-
+        encryptData();
     }
 
-    private void attemptDecrypt(){
+    private void encryptData(){
 
-        String encData = SecurePreferences.getStringValue("secret","");
+        secret = SecurePreferences.getStringValue("decryptedKey","");
 
-        if(encData.equals("")){
-            failAuth();
-        }
-
-        fm.decrypt(encData, new KFingerprintManager.DecryptionCallback() {
+        fm.encrypt(secret, new KFingerprintManager.EncryptionCallback() {
             @Override
-            public void onDecryptionSuccess(@NotNull String messageDecrypted) {
-                SecurePreferences.setValue("decryptedKey",messageDecrypted);
+            public void onEncryptionSuccess(@NotNull String messageEncrypted) {
+                secret = null;
+                SecurePreferences.removeValue("decryptedKey");
+                SecurePreferences.setValue("secret",messageEncrypted);
                 returnToServer();
             }
 
             @Override
-            public void onDecryptionFailed() {
+            public void onEncryptionFailed() {
                 status.setText("Encryption failed");
             }
 
@@ -78,21 +66,14 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFingerprintNotAvailable() {
                 status.setText("Fingerprint not available");
-                failAuth();
             }
 
             @Override
             public void onCancelled() {
-                status.setText("Cancelled");
+                status.setText("Operation cancelled by user");
             }
         }, getSupportFragmentManager());
-    }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.authButton) {
-            attemptDecrypt();
-        }
     }
 
     private void returnToServer(){
@@ -100,9 +81,5 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         synchronized (MyHTTPD.syncToken) {
             MyHTTPD.syncToken.notify();
         }
-    }
-
-    private void failAuth(){
-        Toast.makeText(this,"FAILL",Toast.LENGTH_LONG);
     }
 }
