@@ -1,5 +1,8 @@
 package com.randiny_games.fingerprintauthenticator;
 
+import android.content.Context;
+import android.content.Intent;
+
 import org.jboss.aerogear.security.otp.Totp;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,10 +13,14 @@ import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import fi.iki.elonen.NanoHTTPD;
 
 public class MyHTTPD extends NanoHTTPD {
+    public static Object syncToken = new Object();
     public static final int PORT = 1234;
+    private Context context;
+    private String testString = "test";
 
-    public MyHTTPD() throws IOException {
+    public MyHTTPD(Context context) throws IOException {
         super(PORT);
+        this.context = context;
     }
 
     @Override
@@ -31,6 +38,21 @@ public class MyHTTPD extends NanoHTTPD {
 
             return newFixedLengthResponse(msg.toString());
         } else if (uri.equals("/token")) {
+
+            Intent intent = new Intent(context, AuthActivity.class);
+
+            context.startActivity(intent);
+
+            synchronized(syncToken){
+                try{
+                    System.out.println("Waiting for b to complete...");
+                    syncToken.wait();
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+                System.out.println("test");
+            }
+
             String secret = SecurePreferences.getStringValue("secretValue", "");
 
             if (secret.equals("")) {
