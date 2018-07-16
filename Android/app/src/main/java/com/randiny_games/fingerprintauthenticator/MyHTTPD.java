@@ -6,12 +6,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import fi.iki.elonen.NanoHTTPD;
 
 public class MyHTTPD extends NanoHTTPD {
     public static final int PORT = 1234;
-
-    private Totp theTotp = new Totp("testSecret");
 
     public MyHTTPD() throws IOException {
         super(PORT);
@@ -32,15 +31,33 @@ public class MyHTTPD extends NanoHTTPD {
 
             return newFixedLengthResponse(msg.toString());
         } else if (uri.equals("/token")) {
-            String theToken;
-            theToken = theTotp.now();
-            try {
-                msg.put("token",theToken);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            String secret = SecurePreferences.getStringValue("secretValue", "");
+
+            if (secret.equals("")) {
+                try {
+                    msg.put("token","000000");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else {
+                Totp theTotp = new Totp(secret);
+                String theToken;
+                theToken = theTotp.now();
+                try {
+                    msg.put("token",theToken);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
+
             return newFixedLengthResponse(msg.toString());
+        } else if (uri.equals("/store")){
+            String secret = session.getParameters().get("secret").get(0);
+            SecurePreferences.setValue("secretValue", secret);
+
+            return newFixedLengthResponse("success");
         }
         return  null;
     }
