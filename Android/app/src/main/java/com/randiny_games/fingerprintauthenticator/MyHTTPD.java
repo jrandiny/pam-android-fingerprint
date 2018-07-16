@@ -55,9 +55,14 @@ public class MyHTTPD extends NanoHTTPD {
             return newFixedLengthResponse(msg.toString());
         } else if (uri.equals("/store")){
             String secret = session.getParameters().get("secret").get(0);
-            SecurePreferences.setValue("secretValue", secret);
+            if(!secret.equals("")){
+                SecurePreferences.setValue("secretValue", secret);
+                return newFixedLengthResponse("success");
+            }else {
+                return newFixedLengthResponse("error");
+            }
 
-            return newFixedLengthResponse("success");
+
         }
         return  null;
     }
