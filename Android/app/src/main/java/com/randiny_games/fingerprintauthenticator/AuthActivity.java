@@ -104,7 +104,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         synchronized (MyHTTPD.syncToken) {
             MyHTTPD.syncToken.notify();
         }
-        finishAffinity();
+        finish();
     }
 
     private void failAuth(){

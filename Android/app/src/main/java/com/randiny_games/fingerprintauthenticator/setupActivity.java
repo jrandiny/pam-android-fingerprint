@@ -88,6 +88,6 @@ public class setupActivity extends AppCompatActivity {
         synchronized (MyHTTPD.syncToken) {
             MyHTTPD.syncToken.notify();
         }
-        finishAffinity();
+        finish();
     }
 }

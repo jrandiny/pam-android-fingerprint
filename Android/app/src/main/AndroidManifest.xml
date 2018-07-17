@@ -14,21 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".AuthActivity" />
+        <activity android:name=".AuthActivity" android:noHistory="true" android:excludeFromRecents="true" />
 
         <service
             android:name=".server"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".setupActivity"></activity>
+        <activity android:name=".setupActivity" android:noHistory="true" android:excludeFromRecents="true"></activity>
+
     </application>
 
 </manifest>
