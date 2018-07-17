@@ -3,9 +3,10 @@ import pyotp
 import ConfigParser
 import requests
 import argparse
+import base64
 
 def generate_key():
-  return os.urandom(40).encode("hex")
+  return base64.b32encode(os.urandom(40))
 
 # Argument
 parser = argparse.ArgumentParser(description="Setup pam-android-fingerprint")

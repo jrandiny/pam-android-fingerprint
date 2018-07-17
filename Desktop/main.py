@@ -9,6 +9,8 @@ CONFIG_LOC = "/home/joshua/Dev/pam-android-fingerprint/Desktop/config"
 
 def pam_sm_authenticate(pamh, flags, argv):
 
+  print "Preparing to authenticate using fingerprint"
+
   config = ConfigParser.ConfigParser()
   config.readfp(open(CONFIG_LOC,'r'))
   server_url = config.get('SERVER', 'url')
@@ -21,14 +23,20 @@ def pam_sm_authenticate(pamh, flags, argv):
   if user == None:
     pamh.user = DEFAULT_USER
 
+  print secret
+
   totp = pyotp.TOTP(secret)
 
-  r = requests.get(server_url + "/token")
+  print "Requesting fingerprint from " + server_url
+
+  r = requests.get(server_url + "/token",timeout=30)
   content = r.json();
 
   if totp.verify(content["token"]):
+    print "Authenticated using fingerprint"
     return pamh.PAM_SUCCESS
   else:
+    print "Authentication failed"
     return pamh.PAM_AUTH_ERR
 
 def pam_sm_setcred(pamh, flags, argv):
