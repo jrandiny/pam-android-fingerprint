@@ -25,7 +25,19 @@ config = ConfigParser.ConfigParser()
 
 # Ask input server
 while True:
-  server_url = raw_input("Server url : ")
+  server_url = raw_input("Server location : ")
+
+  #Make lower
+  server_url = server_url.lower()
+
+  # Add http
+  if(server_url[:4] != "http"):
+    server_url = "http://" + server_url
+
+  # check if port exist
+  if not server_url.contains(":"):
+    server_port = raw_input("Server port : ")
+    server_url = server_url + ":" + server_port
 
   # Check
   try:
