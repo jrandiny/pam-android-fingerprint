@@ -2,6 +2,7 @@ import requests
 import json
 import pyotp
 import ConfigParser
+import getpass
 
 DEFAULT_USER = "nobody"
 CONFIG_LOC = "/home/joshua/Dev/pam-android-fingerprint/Desktop/config"
@@ -11,6 +12,7 @@ def pam_sm_authenticate(pamh, flags, argv):
   config = ConfigParser.ConfigParser()
   config.readfp(open(CONFIG_LOC,'r'))
   server_url = config.get('SERVER', 'url')
+  secret = config.get('SECRET', 'secret')
 
   try:
     user = pamh.get_user(None)
@@ -19,7 +21,7 @@ def pam_sm_authenticate(pamh, flags, argv):
   if user == None:
     pamh.user = DEFAULT_USER
 
-  totp = pyotp.TOTP('testSecret')
+  totp = pyotp.TOTP(secret)
 
   r = requests.get(server_url + "/token")
   content = r.json();
