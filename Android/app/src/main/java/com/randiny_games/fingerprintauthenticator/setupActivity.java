@@ -44,7 +44,7 @@ public class setupActivity extends AppCompatActivity {
             public void onEncryptionSuccess(@NotNull String messageEncrypted) {
                 secret = null;
                 SecurePreferences.removeValue("decryptedKey");
-                SecurePreferences.setValue("secret",messageEncrypted);
+                SecurePreferences.setValue("secret", messageEncrypted);
                 returnToServer();
             }
 
@@ -76,10 +76,18 @@ public class setupActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        returnToServer();
+    }
+
     private void returnToServer(){
-        finish();
+
         synchronized (MyHTTPD.syncToken) {
             MyHTTPD.syncToken.notify();
         }
+        finishAffinity();
     }
 }

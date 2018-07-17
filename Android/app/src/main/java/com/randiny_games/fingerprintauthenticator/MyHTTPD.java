@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.jboss.aerogear.security.otp.Totp;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ public class MyHTTPD extends NanoHTTPD {
         String uri = session.getUri();
         JSONObject msg = new JSONObject();
 
+        // Return the identity of the server for verification purpose
         if (uri.equals("/identity")) {
             try {
                 msg.put("identity", "Fingerprint Server");
@@ -37,24 +39,28 @@ public class MyHTTPD extends NanoHTTPD {
             }
 
             return newFixedLengthResponse(msg.toString());
-        } else if (uri.equals("/token")) {
 
+        }
+        // Return authentication token
+        else if (uri.equals("/token")) {
+
+            // Call auth activity
             Intent intent = new Intent(context, AuthActivity.class);
-
             context.startActivity(intent);
 
+            // Pause until auth activity finished
             synchronized(syncToken){
                 try{
-                    System.out.println("Waiting for b to complete...");
                     syncToken.wait();
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }
-                System.out.println("test");
             }
 
+            // Get decrypted key
             String secret = SecurePreferences.getStringValue("decryptedKey", "");
 
+            // Check if there's problem
             if (secret.equals("")) {
                 try {
                     msg.put("token","000000");
@@ -63,38 +69,45 @@ public class MyHTTPD extends NanoHTTPD {
                 }
 
             }else {
+                // Create token
                 Totp theTotp = new Totp(secret);
                 String theToken;
                 theToken = theTotp.now();
+
+                // Setting up response message
                 try {
                     msg.put("token",theToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                // Clear decrypted key
                 SecurePreferences.removeValue("decryptedKey");
             }
 
-
             return newFixedLengthResponse(msg.toString());
-        } else if (uri.equals("/store")){
+        }
+        // Store secret for setup
+        else if (uri.equals("/store")){
 
+            // Get parameter
             String secret = session.getParameters().get("secret").get(0);
+
+            // Check if secret received successfully
             if(!secret.equals("")){
                 SecurePreferences.setValue("decryptedKey", secret);
 
+                // Launching setup activity
                 Intent intent = new Intent(context, setupActivity.class);
-
                 context.startActivity(intent);
 
+                // Wait for finish
                 synchronized(syncToken){
                     try{
-                        System.out.println("Waiting for setup to complete...");
                         syncToken.wait();
                     }catch(InterruptedException e){
                         e.printStackTrace();
                     }
-                    System.out.println("test2");
                 }
 
                 return newFixedLengthResponse("success");

@@ -33,6 +33,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         fm = new KFingerprintManager(this,"fingerprintPam");
 
+        attemptDecrypt();
 
 
     }
@@ -49,6 +50,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         String encData = SecurePreferences.getStringValue("secret","");
 
+        SecurePreferences.removeValue("decryptedKey");
+
         if(encData.equals("")){
             failAuth();
         }
@@ -57,6 +60,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDecryptionSuccess(@NotNull String messageDecrypted) {
                 SecurePreferences.setValue("decryptedKey",messageDecrypted);
+                System.out.println(messageDecrypted);
                 returnToServer();
             }
 
@@ -96,13 +100,15 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void returnToServer(){
-        finish();
+
         synchronized (MyHTTPD.syncToken) {
             MyHTTPD.syncToken.notify();
         }
+        finishAffinity();
     }
 
     private void failAuth(){
-        Toast.makeText(this,"FAILL",Toast.LENGTH_LONG);
+        Toast.makeText(this,"Fail to get encrypted data, have you run setup?",Toast.LENGTH_LONG);
+        returnToServer();
     }
 }
