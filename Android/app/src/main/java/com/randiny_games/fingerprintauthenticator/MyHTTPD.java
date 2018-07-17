@@ -15,12 +15,13 @@ import fi.iki.elonen.NanoHTTPD;
 
 public class MyHTTPD extends NanoHTTPD {
     public static Object syncToken = new Object();
-    public static final int PORT = 1234;
+    public static int port;
     private Context context;
     private String testString = "test";
 
-    public MyHTTPD(Context context) throws IOException {
-        super(PORT);
+    public MyHTTPD(Context context,Integer port) throws IOException {
+        super(port);
+        this.port = port;
         this.context = context;
     }
 

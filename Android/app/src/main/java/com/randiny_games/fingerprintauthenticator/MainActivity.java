@@ -1,15 +1,19 @@
 package com.randiny_games.fingerprintauthenticator;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button setupButton;
 
     private Boolean serverStatus;
+    private Integer port;
 
 
     @Override
@@ -32,13 +37,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupButton = (Button) findViewById(R.id.setupBtn);
 
         serverIntent = new Intent(this, server.class);
+        serverIntent.putExtra("port",port);
 
         if(savedInstanceState!=null){
+            port = savedInstanceState.getInt("port");
             serverStatus = savedInstanceState.getBoolean("serverStatus");
             if(!serverStatus){
                 startServer();
             }
         }else {
+            port = 1234;
             startServer();
         }
 
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putBoolean("serverStatus",serverStatus);
+        outState.putInt("port",port);
         super.onSaveInstanceState(outState, outPersistentState);
 
     }
@@ -64,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
-        statusText.setText(getString(R.string.statusStarted) + ip);
+        statusText.setText(getString(R.string.statusStarted) + ip + "(port : " + port +")");
     }
 
     private void stopServer(){
@@ -73,6 +82,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         serverStatus = false;
 
         statusText.setText(R.string.statusStopped);
+    }
+
+    private void setPort(){
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+        ab.setTitle("Set Port");
+
+        EditText portInput = new EditText(this);
+        portInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        ab.setView(portInput);
+        ab.setCancelable(true);
+        ab.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        ab.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                port = Integer.parseInt(portInput.getText().toString());
+                serverIntent.removeExtra("port");
+                serverIntent.putExtra("port",port);
+                stopServer();
+                startServer();
+            }
+        });
+
+        ab.show();
+
     }
 
 
@@ -85,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startServer();
             }
 
+        } else if(view.getId() == R.id.setupBtn){
+            setPort();
         }
     }
 }

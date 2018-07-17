@@ -7,6 +7,6 @@
     <string name="dialog_text">Authenticate with your fingerprint</string>
     <string name="authenticate">Authenticate</string>
     <string name="waiting_auth">Waiting auth</string>
-    <string name="setupbtn">Setup</string>
+    <string name="setupbtn">Port</string>
     <string name="defSetupStatus">Processing</string>
 </resources>

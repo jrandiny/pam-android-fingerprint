@@ -39,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/statusStarting"
+                android:gravity="center"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,14 +54,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/statusText"
                 tools:layout_editor_absoluteX="148dp" />
 
-            <TextView
-                android:id="@+id/statusHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="TextView"
-                app:layout_constraintTop_toTopOf="@+id/scrollView"
-                tools:layout_editor_absoluteX="163dp" />
         </LinearLayout>
     </ScrollView>
 
