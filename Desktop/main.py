@@ -23,8 +23,6 @@ def pam_sm_authenticate(pamh, flags, argv):
   if user == None:
     pamh.user = DEFAULT_USER
 
-  print secret
-
   totp = pyotp.TOTP(secret)
 
   print "Requesting fingerprint from " + server_url
