@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         statusText = (TextView)findViewById(R.id.statusText);
         fab = (FloatingActionButton) findViewById(R.id.startStopFab);
-        setupButton = (Button) findViewById(R.id.setupBtn);
+        setupButton = (Button) findViewById(R.id.portBtn);
 
         serverIntent = new Intent(this, server.class);
         serverIntent.putExtra("port",port);
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startServer();
             }
 
-        } else if(view.getId() == R.id.setupBtn){
+        } else if(view.getId() == R.id.portBtn){
             setPort();
         }
     }

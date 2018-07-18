@@ -46,11 +46,11 @@
                 tools:layout_editor_absoluteY="252dp" />
 
             <Button
-                android:id="@+id/setupBtn"
+                android:id="@+id/portBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/setupbtn"
+                android:text="@string/portBtn"
                 app:layout_constraintTop_toBottomOf="@+id/statusText"
                 tools:layout_editor_absoluteX="148dp" />
 

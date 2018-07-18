@@ -37,7 +37,7 @@ public class server extends Service {
 
         mBuilder.setSmallIcon(R.drawable.ic_fingerprint_white_24dp);
         mBuilder.setContentTitle("Fingerprint Authenticator");
-        mBuilder.setContentText("Server on " + ip);
+        mBuilder.setContentText("Server on " + ip + "(port : " + port +")");
         mBuilder.setOngoing(true);
         mBuilder.setContentIntent(mainIntent);
 
