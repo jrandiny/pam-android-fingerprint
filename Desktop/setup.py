@@ -60,7 +60,9 @@ config.set("SERVER", "url" , server_url)
 if args.first:
   secretKey = generate_key()
   queryParam = {"secret":secretKey}
-  r = requests.post(server_url+"/store",params=queryParam)
+  r = requests.post(server_url+"/store",params=queryParam,timeout=30)
+
+  print "Verify on phone"
 
   config.add_section("SECRET")
   config.set("SECRET", "secret" , secretKey)
