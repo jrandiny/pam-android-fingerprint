@@ -3,6 +3,8 @@ package com.randiny_games.fingerprintauthenticator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.jesusm.kfingerprintmanager.KFingerprintManager;
@@ -11,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
-public class setupActivity extends AppCompatActivity {
+public class setupActivity extends AppCompatActivity implements View.OnClickListener {
 
     private KFingerprintManager fm;
     private TextView status;
     private String secret;
+    private Button retryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,9 @@ public class setupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setup);
 
         status = (TextView) findViewById(R.id.setupStatus);
+        retryBtn = (Button) findViewById(R.id.setupRetryBtn);
+
+        retryBtn.setOnClickListener(this);
 
         fm = new KFingerprintManager(this,"fingerprintPam");
 
@@ -32,10 +38,10 @@ public class setupActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        encryptData();
+        attemptEncrypt();
     }
 
-    private void encryptData(){
+    private void attemptEncrypt(){
 
         secret = SecurePreferences.getStringValue("decryptedKey","");
 
@@ -89,5 +95,12 @@ public class setupActivity extends AppCompatActivity {
             MyHTTPD.syncToken.notify();
         }
         finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.setupRetryBtn){
+            attemptEncrypt();
+        }
     }
 }
