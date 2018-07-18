@@ -30,14 +30,14 @@ while True:
   #Make lower
   server_url = server_url.lower()
 
+  # check if port exist
+  if not ":" in server_url:
+    server_port = raw_input("Server port : ")
+    server_url = server_url + ":" + server_port
+
   # Add http
   if(server_url[:4] != "http"):
     server_url = "http://" + server_url
-
-  # check if port exist
-  if not server_url.contains(":"):
-    server_port = raw_input("Server port : ")
-    server_url = server_url + ":" + server_port
 
   # Check
   try:
@@ -67,3 +67,5 @@ if args.first:
 
 # write config
 config.write(open("config", "w"))
+
+print "Setup success"
