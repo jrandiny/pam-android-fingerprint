@@ -35,7 +35,7 @@ public class server extends Service {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
-        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        mBuilder.setSmallIcon(R.drawable.ic_fingerprint_white_24dp);
         mBuilder.setContentTitle("Fingerprint Authenticator");
         mBuilder.setContentText("Server on " + ip);
         mBuilder.setOngoing(true);
