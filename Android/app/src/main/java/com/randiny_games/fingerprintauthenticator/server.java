@@ -1,5 +1,6 @@
 package com.randiny_games.fingerprintauthenticator;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -40,6 +41,7 @@ public class server extends Service {
         mBuilder.setContentText("Server on " + ip + "(port : " + port +")");
         mBuilder.setOngoing(true);
         mBuilder.setContentIntent(mainIntent);
+        mBuilder.setPriority(Notification.PRIORITY_MIN);
 
         startForeground(1,mBuilder.build());
 
