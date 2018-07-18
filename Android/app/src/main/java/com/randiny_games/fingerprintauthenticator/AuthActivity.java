@@ -1,9 +1,17 @@
 package com.randiny_games.fingerprintauthenticator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +28,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     private KFingerprintManager fm;
     private TextView status;
 
+    private Boolean registered;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +40,41 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         status = (TextView) findViewById(R.id.authDesc);
 
         authButton.setOnClickListener(this);
+        authButton.setEnabled(false);
 
         fm = new KFingerprintManager(this,"fingerprintPam");
 
-        attemptDecrypt();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = pm.isInteractive();
+
+        registered = false;
+
+        if(isScreenOn){
+            attemptDecrypt();
+        }else {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_ON);
+            registerReceiver(screenCheck, filter);
+            registered = true;
+        }
 
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private final BroadcastReceiver screenCheck = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            attemptDecrypt();
 
-        System.out.println("masuk");
-
-    }
+            unregisterReceiver(screenCheck);
+            registered = false;
+        }
+    };
 
     private void attemptDecrypt(){
 
@@ -60,23 +90,25 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDecryptionSuccess(@NotNull String messageDecrypted) {
                 SecurePreferences.setValue("decryptedKey",messageDecrypted);
-                System.out.println(messageDecrypted);
                 returnToServer();
             }
 
             @Override
             public void onDecryptionFailed() {
-                status.setText("Encryption failed");
+                status.setText("Decryption failed");
+                failAuth();
             }
 
             @Override
             public void onFingerprintNotRecognized() {
                 status.setText("Fingerprint not recognized");
+                authButton.setEnabled(true);
             }
 
             @Override
             public void onAuthenticationFailedWithHelp(@Nullable String help) {
                 status.setText(help);
+                authButton.setEnabled(true);
             }
 
             @Override
@@ -88,6 +120,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onCancelled() {
                 status.setText("Cancelled");
+                authButton.setEnabled(true);
             }
         }, getSupportFragmentManager());
     }
@@ -110,5 +143,15 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     private void failAuth(){
         Toast.makeText(this,"Fail to get encrypted data, have you run setup?",Toast.LENGTH_LONG);
         returnToServer();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(registered){
+            unregisterReceiver(screenCheck);
+            registered = false;
+        }
+
     }
 }

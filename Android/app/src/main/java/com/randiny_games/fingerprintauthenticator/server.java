@@ -20,7 +20,14 @@ public class server extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Integer port = intent.getIntExtra("port",1234);
+        Integer port;
+
+        if (intent.hasExtra("port")){
+            port  = intent.getIntExtra("port",1234);
+        }else{
+            port = 1234;
+        }
+
 
         try {
             httpServer = new MyHTTPD(this, port);
