@@ -18,5 +18,5 @@ Compile and install android app using gradle
  4. Run `setup.py -f` for first time setup (make sure the Android server is running)
 
 ## Usage
-<img src="android.gif" alt="android animation" height="330px"/>
-<img src="desktop.gif" alt="desktop animation" height="330px"/>
+
+![PAM Android Fingerprint in action](action.gif)
