@@ -1,5 +1,7 @@
 package com.randiny_games.fingerprintauthenticator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
