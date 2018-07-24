@@ -2,9 +2,14 @@
 
 PAM authentication module using Android fingerprint sensor
 
+For stability please use release version
+
 ## Android
 
 Compile and install android app using gradle
+
+Compatible with Android 6.0 (API 23) and up  
+Tested with Android 8.0 (API 26)
 
 ## Desktop
 
