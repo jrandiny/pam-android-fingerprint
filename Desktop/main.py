@@ -1,8 +1,6 @@
 import requests
-import json
 import pyotp
 import ConfigParser
-import getpass
 
 DEFAULT_USER = "nobody"
 CONFIG_LOC = "/home/joshua/Dev/pam-android-fingerprint/Desktop/config"

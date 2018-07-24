@@ -1,5 +1,4 @@
 import os
-import pyotp
 import ConfigParser
 import requests
 import argparse
