@@ -3,6 +3,7 @@ import ConfigParser
 import requests
 import argparse
 import base64
+import sys
 
 
 def generate_key():
@@ -59,15 +60,33 @@ config.set("SERVER", "url", server_url)
 
 # setup secret
 if args.first:
-    secretKey = generate_key()
-    queryParam = {"secret": secretKey}
+    while True:
+        success = True
 
-    print "Verify on phone"
+        secretKey = generate_key()
+        queryParam = {"secret": secretKey}
 
-    r = requests.post(server_url + "/store", params=queryParam, timeout=30)
+        print "Verify on phone"
 
-    config.add_section("SECRET")
-    config.set("SECRET", "secret", secretKey)
+        try:
+            r = requests.post(server_url + "/store", params=queryParam, timeout=30)
+            content = r.json()
+        except:
+            print "Verification failed"
+            success = False
+
+        if content["status"] == "success":
+            config.add_section("SECRET")
+            config.set("SECRET", "secret", secretKey)
+            break
+        else:
+            print "Verification failed"
+            success = False
+
+        if not success:
+            retry = raw_input("Retry (Y/n)?")
+            if retry == "n":
+                sys.exit()
 
 # write config
 config.write(open("config", "w"))

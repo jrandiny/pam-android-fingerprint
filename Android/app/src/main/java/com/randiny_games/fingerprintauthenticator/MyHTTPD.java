@@ -92,7 +92,13 @@ public class MyHTTPD extends NanoHTTPD {
         else if (uri.equals("/store")){
 
             // Get parameter
-            String secret = session.getParameters().get("secret").get(0);
+            String secret = null;
+            try {
+                secret = session.getParameters().get("secret").get(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+                secret = "";
+            }
 
             // Check if secret received successfully
             if(!secret.equals("")){
@@ -111,10 +117,30 @@ public class MyHTTPD extends NanoHTTPD {
                     }
                 }
 
-                return newFixedLengthResponse("success");
+                if(SecurePreferences.getStringValue("decryptedKey","").equals("")){
+                    try {
+                        msg.put("status","success");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    try {
+                        msg.put("status","error");
+                        msg.put("error","authFail");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }else {
-                return newFixedLengthResponse("error");
+                try {
+                    msg.put("status","error");
+                    msg.put("error","secretFail");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
+            return newFixedLengthResponse(msg.toString());
 
         }
         return  null;
