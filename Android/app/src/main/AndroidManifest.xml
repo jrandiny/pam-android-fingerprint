@@ -31,7 +31,7 @@
             android:exported="true" />
         
         <receiver
-            android:name=".startAtBoot"
+            android:name=".bReceiver"
             android:label="startAtBoot">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
