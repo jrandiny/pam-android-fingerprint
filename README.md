@@ -13,7 +13,10 @@ Tested with Android 8.0 (API 26)
 
 ## Desktop
 
+Tested on Ubuntu 18.04
+
 ### Dependencies
+
 `sudo apt install python-pyotp python-pam python-requests`
 
 ### Setting up
@@ -25,3 +28,16 @@ Tested with Android 8.0 (API 26)
 ## Usage
 
 ![PAM Android Fingerprint in action](action.gif)
+
+## Roadmap
+
+- v0.2
+  - Faster phone detection
+  - Replace deprecated Android API
+  - Add setup error detection
+- v0.3
+  - Overhaul Android UI
+  - Add setting
+- v0.4
+  - Support for multiuser
+  - Better authentication method
