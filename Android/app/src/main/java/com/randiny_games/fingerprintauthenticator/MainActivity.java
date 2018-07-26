@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startServer(){
         String ip;
 
+        setupButton.setEnabled(false);
+
         statusText.setText(getString(R.string.statusStarting));
 
         startService(serverIntent);
@@ -74,10 +76,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
-        statusText.setText(getString(R.string.statusStarted) + ip + "(port : " + port +")");
+        statusText.setText(String.format(getString(R.string.statusStarted), ip, port));
     }
 
     private void stopServer(){
+        setupButton.setEnabled(true);
+
         stopService(serverIntent);
         fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_white_24dp));
         serverStatus = false;

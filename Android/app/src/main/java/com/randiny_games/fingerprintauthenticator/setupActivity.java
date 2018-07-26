@@ -88,13 +88,13 @@ public class setupActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onEncryptionFailed() {
-                status.setText("Encryption failed");
+                status.setText(R.string.statusFailEncryption);
                 failFatal();
             }
 
             @Override
             public void onFingerprintNotRecognized() {
-                status.setText("Fingerprint not recognized");
+                status.setText(R.string.statusFailNotRecognized);
                 retryBtn.setEnabled(true);
             }
 
@@ -106,13 +106,13 @@ public class setupActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFingerprintNotAvailable() {
-                status.setText("Fingerprint not available");
+                status.setText(R.string.statusFailNotAvailable);
                 failFatal();
             }
 
             @Override
             public void onCancelled() {
-                status.setText("Operation cancelled by user");
+                status.setText(R.string.statusCanceled);
                 retryBtn.setEnabled(true);
             }
         }, getSupportFragmentManager());
@@ -135,7 +135,7 @@ public class setupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void failFatal(){
-        Toast.makeText(this,"Fatal error",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.toastFailFatal,Toast.LENGTH_LONG).show();
         returnToServer();
     }
 

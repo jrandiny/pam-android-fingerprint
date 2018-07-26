@@ -17,12 +17,15 @@ public class MyHTTPD extends NanoHTTPD {
     public static final Object syncToken = new Object();
     private int port;
     private Context context;
-    private String testString = "test";
 
     public MyHTTPD(Context context,Integer port) throws IOException {
         super(port);
         this.port = port;
         this.context = context;
+    }
+
+    public int getPort(){
+        return port;
     }
 
     @Override

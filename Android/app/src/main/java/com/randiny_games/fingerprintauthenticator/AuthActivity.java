@@ -93,13 +93,13 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onDecryptionFailed() {
-                status.setText("Decryption failed");
+                status.setText(R.string.statusFailDecryption);
                 failAuth();
             }
 
             @Override
             public void onFingerprintNotRecognized() {
-                status.setText("Fingerprint not recognized");
+                status.setText(R.string.statusFailNotRecognized);
                 authButton.setEnabled(true);
             }
 
@@ -111,13 +111,13 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onFingerprintNotAvailable() {
-                status.setText("Fingerprint not available");
+                status.setText(R.string.statusFailNotAvailable);
                 failAuth();
             }
 
             @Override
             public void onCancelled() {
-                status.setText("Cancelled");
+                status.setText(R.string.statusCanceled);
                 authButton.setEnabled(true);
             }
         }, getSupportFragmentManager());
@@ -139,7 +139,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void failAuth(){
-        Toast.makeText(this,"Fail to get encrypted data, have you run setup?",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.toastFailGetEncrypted,Toast.LENGTH_LONG).show();
         returnToServer();
     }
 

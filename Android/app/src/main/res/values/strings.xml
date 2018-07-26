@@ -1,11 +1,18 @@
 <resources>
     <string name="app_name">Fingerprint Authenticator</string>
     <string name="statusStarting">Starting up</string>
-    <string name="statusStarted">Started on </string>
+    <string name="statusStarted">Started on %s (port : %d)</string>
     <string name="statusStopped">Stopped</string>
     <string name="authRetry">Retry</string>
     <string name="authStatusWaiting">Waiting auth</string>
     <string name="portBtn">Port</string>
     <string name="setupStatus">Processing</string>
     <string name="setupRetry">Retry</string>
+    <string name="statusFailDecryption">Decryption failed</string>
+    <string name="statusFailNotRecognized">Fingerprint not recognized</string>
+    <string name="statusFailNotAvailable">Fingerprint not available</string>
+    <string name="statusCanceled">Cancelled</string>
+    <string name="toastFailGetEncrypted">Fail to get encrypted data, have you run setup?</string>
+    <string name="statusFailEncryption">Encryption failed</string>
+    <string name="toastFailFatal">Fatal error</string>
 </resources>
