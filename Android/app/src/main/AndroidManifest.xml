@@ -28,18 +28,21 @@
         <service
             android:name=".server"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
         
         <receiver
             android:name=".bReceiver"
             android:label="startAtBoot">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
 
-        <activity android:name=".setupActivity" android:noHistory="true" android:excludeFromRecents="true"></activity>
+        <activity
+            android:name=".setupActivity"
+            android:noHistory="true"
+            android:excludeFromRecents="true" />
 
     </application>
 

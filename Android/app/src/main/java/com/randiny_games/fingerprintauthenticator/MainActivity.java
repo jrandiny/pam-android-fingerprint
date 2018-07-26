@@ -1,7 +1,5 @@
 package com.randiny_games.fingerprintauthenticator;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView statusText;
-    private String ip;
     private FloatingActionButton fab;
     private Intent serverIntent;
     private Button setupButton;
@@ -66,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startServer(){
+        String ip;
+
         statusText.setText(getString(R.string.statusStarting));
 
         startService(serverIntent);
@@ -96,21 +95,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ab.setView(portInput);
         ab.setCancelable(true);
-        ab.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        ab.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                port = Integer.parseInt(portInput.getText().toString());
-                serverIntent.removeExtra("port");
-                serverIntent.putExtra("port",port);
-                stopServer();
-                startServer();
-            }
+        ab.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+        ab.setPositiveButton("Set", (dialogInterface, i) -> {
+            port = Integer.parseInt(portInput.getText().toString());
+            serverIntent.removeExtra("port");
+            serverIntent.putExtra("port",port);
+            stopServer();
+            startServer();
         });
 
         ab.show();

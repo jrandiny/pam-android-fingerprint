@@ -14,8 +14,8 @@ import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import fi.iki.elonen.NanoHTTPD;
 
 public class MyHTTPD extends NanoHTTPD {
-    public static Object syncToken = new Object();
-    public static int port;
+    public static final Object syncToken = new Object();
+    private int port;
     private Context context;
     private String testString = "test";
 
@@ -31,117 +31,119 @@ public class MyHTTPD extends NanoHTTPD {
         JSONObject msg = new JSONObject();
 
         // Return the identity of the server for verification purpose
-        if (uri.equals("/identity")) {
-            try {
-                msg.put("identity", "Fingerprint Server");
-                msg.put("version", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return newFixedLengthResponse(msg.toString());
-
-        }
-        // Return authentication token
-        else if (uri.equals("/token")) {
-
-            // Call auth activity
-            Intent intent = new Intent(context, AuthActivity.class);
-            context.startActivity(intent);
-
-            // Pause until auth activity finished
-            synchronized(syncToken){
-                try{
-                    syncToken.wait();
-                }catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-
-            // Get decrypted key
-            String secret = SecurePreferences.getStringValue("decryptedKey", "");
-
-            // Check if there's problem
-            if (secret.equals("")) {
+        switch (uri) {
+            case "/identity":
                 try {
-                    msg.put("token","000000");
+                    msg.put("identity", "Fingerprint Server");
+                    msg.put("version", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-            }else {
-                // Create token
-                Totp theTotp = new Totp(secret);
-                String theToken;
-                theToken = theTotp.now();
+                return newFixedLengthResponse(msg.toString());
 
-                // Setting up response message
-                try {
-                    msg.put("token",theToken);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                // Clear decrypted key
-                SecurePreferences.removeValue("decryptedKey");
-            }
+            // Return authentication token
+            case "/token": {
 
-            return newFixedLengthResponse(msg.toString());
-        }
-        // Store secret for setup
-        else if (uri.equals("/store")){
-
-            // Get parameter
-            String secret = null;
-            try {
-                secret = session.getParameters().get("secret").get(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-                secret = "";
-            }
-
-            // Check if secret received successfully
-            if(!secret.equals("")){
-                SecurePreferences.setValue("decryptedKey", secret);
-
-                // Launching setup activity
-                Intent intent = new Intent(context, setupActivity.class);
+                // Call auth activity
+                Intent intent = new Intent(context, AuthActivity.class);
                 context.startActivity(intent);
 
-                // Wait for finish
-                synchronized(syncToken){
-                    try{
+                // Pause until auth activity finished
+                synchronized (syncToken) {
+                    try {
                         syncToken.wait();
-                    }catch(InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if(SecurePreferences.getStringValue("decryptedKey","").equals("")){
+                // Get decrypted key
+                String secret = SecurePreferences.getStringValue("decryptedKey", "");
+
+                // Check if there's problem
+                if (secret.equals("")) {
                     try {
-                        msg.put("status","success");
+                        msg.put("token", "000000");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else {
+
+                } else {
+                    // Create token
+                    Totp theTotp = new Totp(secret);
+                    String theToken;
+                    theToken = theTotp.now();
+
+                    // Setting up response message
                     try {
-                        msg.put("status","error");
-                        msg.put("error","authFail");
+                        msg.put("token", theToken);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                    // Clear decrypted key
+                    SecurePreferences.removeValue("decryptedKey");
                 }
-            }else {
-                try {
-                    msg.put("status","error");
-                    msg.put("error","secretFail");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                return newFixedLengthResponse(msg.toString());
             }
+            // Store secret for setup
+            case "/store": {
 
-            return newFixedLengthResponse(msg.toString());
+                // Get parameter
+                String secret = null;
+                try {
+                    secret = session.getParameters().get("secret").get(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    secret = "";
+                }
 
+                // Check if secret received successfully
+                if (!secret.equals("")) {
+                    SecurePreferences.setValue("decryptedKey", secret);
+
+                    // Launching setup activity
+                    Intent intent = new Intent(context, setupActivity.class);
+                    context.startActivity(intent);
+
+                    // Wait for finish
+                    synchronized (syncToken) {
+                        try {
+                            syncToken.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (SecurePreferences.getStringValue("decryptedKey", "").equals("")) {
+                        try {
+                            msg.put("status", "success");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            msg.put("status", "error");
+                            msg.put("error", "authFail");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    try {
+                        msg.put("status", "error");
+                        msg.put("error", "secretFail");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return newFixedLengthResponse(msg.toString());
+
+            }
         }
         return  null;
     }

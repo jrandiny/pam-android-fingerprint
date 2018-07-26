@@ -135,7 +135,7 @@ public class setupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void failFatal(){
-        Toast.makeText(this,"Fatal error",Toast.LENGTH_LONG);
+        Toast.makeText(this,"Fatal error",Toast.LENGTH_LONG).show();
         returnToServer();
     }
 

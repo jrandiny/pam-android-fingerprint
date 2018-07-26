@@ -43,9 +43,8 @@ public class server extends Service {
         }
 
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-
-
 
         startForeground(1,getMyNotif(ip, port));
 
@@ -72,7 +71,7 @@ public class server extends Service {
         return mBuilder.build();
     }
 
-    private BroadcastReceiver wifiChanged = new BroadcastReceiver() {
+    private final BroadcastReceiver wifiChanged = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             NetworkInfo nwInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);

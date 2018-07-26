@@ -33,7 +33,7 @@ Tested on Ubuntu 18.04
 
 - v0.2
   - Faster phone detection
-  - Replace deprecated Android API
+  - Android cleanup
   - Add setup error detection
 - v0.3
   - Overhaul Android UI

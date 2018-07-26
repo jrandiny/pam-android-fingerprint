@@ -4,12 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -141,7 +139,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void failAuth(){
-        Toast.makeText(this,"Fail to get encrypted data, have you run setup?",Toast.LENGTH_LONG);
+        Toast.makeText(this,"Fail to get encrypted data, have you run setup?",Toast.LENGTH_LONG).show();
         returnToServer();
     }
 
